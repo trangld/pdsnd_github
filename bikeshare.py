@@ -5,6 +5,7 @@ import numpy as np
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
+USER_ANSWERS = ['yes','no']
 MONTH_DATA = ['january', 'february', 'march', 'april', 'may', 'june', 'all']
 DAY_DATA = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
 
@@ -20,18 +21,21 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     city = input('Please input city (chicago, new york city, washington): ')
+    city = city.lower()
     while city not in CITY_DATA:
         city = input('Incorrect city name, please try again:')
         city = city.lower()
 
     # TO DO: get user input for month (all, january, february, ... , june)
     month = input('Please input month ' + str(MONTH_DATA) + ': ')
+    month = month.lower()
     while month not in MONTH_DATA:
         month = input('Incorrect month, please try again:')
         month = month.lower()
 
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
     day = input('Please input day ' + str(DAY_DATA) + ': ')
+    day = day.lower()
     while day not in DAY_DATA:
         day = input('Incorrect day name, please try again:')
         day = day.lower()
@@ -133,12 +137,18 @@ def user_stats(df):
     print('Counts of user types: ', df['User Type'].value_counts())
 
     # TO DO: Display counts of gender
-    print('Counts of gender: ', df['Gender'].value_counts())
+    if 'Gender' in df.columns:    
+        print('Counts of gender: ', df['Gender'].value_counts())
+    else:
+        print('Gender stats cannot be calculated because Gender does not appear in the dataframe')
 
     # TO DO: Display earliest, most recent, and most common year of birth
-    print('Display earliest year of birth:', df['Birth Year'].min())
-    print('Most recent year of birth:', df['Birth Year'].max())
-    print('Most common year of birth:', df['Birth Year'].mode()[0])
+    if 'Birth Year' in df.columns:    
+        print('Earliest year of birth:', df['Birth Year'].min())
+        print('Most recent year of birth:', df['Birth Year'].max())
+        print('Most common year of birth:', df['Birth Year'].mode()[0])
+    else:
+        print('Birth Year stats cannot be calculated because Birth Year does not appear in the dataframe')
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -153,6 +163,24 @@ def main():
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
+
+        user_answer = input('Do you want to see the first 5 rows of data? (Yes/No):')
+        while user_answer.lower() not in USER_ANSWERS:
+            user_answer = input('Please enter Yes or No: ')
+            user_answer = user_answer.lower()
+
+        # show 5 lines
+        i = 0
+        while True :
+            if user_answer.lower() == 'yes':
+                print(df.iloc[i : i + 5])
+                i += 5
+                user_answer = input('Do you want to see the next 5 rows of data? (Yes/No):')
+                while user_answer.lower() not in USER_ANSWERS:
+                    user_answer = input('Please enter Yes or No: ')
+                    user_answer = user_answer.lower()
+            else:
+                break           
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
