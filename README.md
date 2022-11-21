@@ -15,3 +15,5 @@ Include the files used: bikeshare.py
 ### Credits
 It's important to give proper credit. Add links to any repo that inspired you or blogposts you consulted.
 
+### Note
+GET_PASSES_THIS_REPO_UDACITY_PLEASE
